@@ -53,6 +53,18 @@
             padding-right: env(safe-area-inset-right);
         }
 
+        /* ЗАГОЛОВОК ДНЕПРО */
+        .header-title {
+            background: #dc143c;
+            color: white;
+            text-align: center;
+            padding: 12px 16px;
+            font-size: 20px;
+            font-weight: 700;
+            width: 100%;
+            border-bottom: 2px solid #a90e2e;
+        }
+
         /* ПОЛНОЭКРАННАЯ ЗАГРУЗКА */
         .fullscreen-loading {
             position: fixed;
@@ -1056,6 +1068,9 @@
     <div class="notification" id="notification"></div>
     
     <div class="container" id="main-container" style="display: none;">
+        <!-- ЗАГОЛОВОК ДНЕПРО -->
+        <div class="header-title">ДНЕПРО</div>
+        
         <div class="header-section">
             <div class="tabs">
                 <button class="tab-btn active" data-tab="tab1">
@@ -1117,6 +1132,7 @@
     </div>
 
     <script>
+        // ... (остальной JavaScript код остается без изменений)
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbx5-tGhnLwWavAOApJdGfV51jr1JVii4YvOexG-ACx3cmOMK0qiu46mwWi1bNCnRuEe/exec';
         const CARDS_PER_PAGE = 6;
 
