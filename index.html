@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Добавить задачу</title>
+  <style>
+    :root {
+      --light-bg: #d7dce3;
+      --dark-bg: #1a2f40;
+      --accent: #dc143c;
+      --text-dark: #1a2f40;
+      --text-light: #ffffff;
+      --input-padding: 14px;
+      --border-radius: 8px;
+    }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      min-height: 100vh;
+      height: 100vh;
+    }
+    .container {
+      background-color: var(--text-light);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      max-height: 96vh;
+    }
+    header {
+      background-color: var(--dark-bg);
+      padding: 12px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      margin: 0 0 15px 0;
+      flex-shrink: 0;
+    }
+    header h1 {
+      font-size: 1.3rem;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      overflow: hidden;
+    }
+    .form-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      overflow: hidden;
+      justify-content: space-between;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    label {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #444;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    input[type="file"] {
+      width: 100%;
+      padding: var(--input-padding);
+      border: 2px solid #ccc;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 44px;
+    }
+    input:focus {
+      border-color: var(--accent);
+    }
+    input[type="file"] {
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
+    input[type="file"]::file-selector-button {
+      padding: 8px 12px;
+      background-color: var(--dark-bg);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    button {
+      padding: 14px;
+      background-color: var(--accent);
+      color: var(--text-light);
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      min-height: 50px;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    button:hover, button:active {
+      background-color: #b0102f;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    /* Стили для индикатора загрузки */
+    .loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--accent);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loader-text {
+      color: white;
+      margin-top: 12px;
+      font-size: 1rem;
+      text-align: center;
+    }
+    
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Медиа-запросы для адаптивности */
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      
+      .container {
+        padding: 12px;
+        max-height: 98vh;
+      }
+      
+      header {
+        padding: 10px;
+        margin-bottom: 12px;
+      }
+      
+      header h1 {
+        font-size: 1.2rem;
+      }
+      
+      input[type="text"],
+      input[type="date"],
+      input[type="number"],
+      input[type="file"] {
+        padding: 12px;
+        font-size: 16px;
+      }
+      
+      button {
+        padding: 12px;
+        font-size: 1rem;
+      }
+      
+      .spinner {
+        width: 35px;
+        height: 35px;
+        border-width: 3px;
+      }
+      
+      .loader-text {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Для очень маленьких экранов */
+    @media (max-width: 350px) and (max-height: 650px) {
+      header h1 {
+        font-size: 1.1rem;
+      }
+      
+      input[type="text"],
+      input[type="date"],
+      input[type="number"],
+      input[type="file"] {
+        padding: 10px;
+        min-height: 40px;
+      }
+      
+      button {
+        padding: 10px;
+        font-size: 0.95rem;
+        min-height: 45px;
+      }
+      
+      .form-group {
+        gap: 4px;
+      }
+      
+      label {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Для landscape ориентации */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body {
+        align-items: flex-start;
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+      
+      .container {
+        max-height: 98vh;
+        overflow-y: auto;
+      }
+      
+      header {
+        padding: 8px;
+      }
+      
+      header h1 {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Для очень высоких экранов */
+    @media (min-height: 800px) {
+      .container {
+        max-height: 90vh;
+      }
+      
+      form {
+        gap: 16px;
+      }
+      
+      .form-group {
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>ДОБАВИТЬ ЗАДАЧУ</h1>
+    </header>
+    <form id="form">
+      <div class="form-content">
+        <div class="form-group">
+          <label for="taskName">Название задачи</label>
+          <input type="text" id="taskName" placeholder="Введите название задачи" required>
+        </div>
+
+        <div class="form-group">
+          <label for="lastDate">Последняя дата выполнения</label>
+          <input type="date" id="lastDate" required>
+        </div>
+
+<div class="form-group">
+  <label for="periodicity">Периодичность (дней)</label>
+  <input type="number" id="periodicity" min="1" required>
+</div>
+
+
+        <div class="form-group">
+          <label for="photo">Фотография (необязательно)</label>
+          <input type="file" id="photo" accept="image/*">
+        </div>
+
+        <button type="submit" id="submit-btn">Добавить задачу</button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Индикатор загрузки -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <div class="loader-text">Добавление задачи...</div>
+    </div>
+  </div>
+
+  <script>
+    // ЗАМЕНИТЕ НА ВАШ URL Google Apps Script!
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2W8nBS0vxamGcOD8JpLxMfoN5Y_0-VkD0fULvTt0yZPKOsFiwkXdaVrdTPmRshZ6auA/exec';
+    
+    // Элементы DOM
+    const form = document.getElementById('form');
+    const submitBtn = document.getElementById('submit-btn');
+    const loader = document.getElementById('loader');
+    
+    // Функция для проверки, помещается ли форма на экране
+    function checkFormFitsScreen() {
+      const formHeight = document.querySelector('.container').offsetHeight;
+      const windowHeight = window.innerHeight;
+      
+      if (formHeight > windowHeight) {
+        // Если форма не помещается, немного уменьшаем отступы
+        document.querySelector('.container').style.padding = '10px';
+        document.querySelector('header').style.padding = '8px';
+        document.querySelector('header').style.marginBottom = '8px';
+        document.querySelectorAll('input').forEach(input => {
+          input.style.padding = '10px';
+          input.style.minHeight = '40px';
+        });
+        document.querySelector('button').style.padding = '10px';
+        document.querySelector('button').style.minHeight = '45px';
+      }
+    }
+    
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const taskName = document.getElementById('taskName').value.trim();
+      const lastDate = document.getElementById('lastDate').value;
+      const periodicity = document.getElementById('periodicity').value;
+      const fileInput = document.getElementById('photo');
+      
+      if (!taskName || !lastDate || !periodicity) {
+        alert('Заполните все обязательные поля.');
+        return;
+      }
+      
+      // Блокируем кнопку и показываем индикатор загрузки
+      submitBtn.disabled = true;
+      loader.style.display = 'flex';
+      
+      try {
+        // Преобразуем дату в формат DD.MM.YYYY
+        const dateParts = lastDate.split('-');
+        const formattedDate = `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}`;
+        
+        // Подготавливаем данные для отправки
+        const formData = {
+          taskName: taskName,
+          lastDate: formattedDate,
+          periodicity: periodicity
+        };
+        
+        // Если есть фото, добавляем его данные
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const base64Data = await readFileAsBase64(file);
+          formData.base64 = base64Data;
+          formData.mimeType = file.type;
+          formData.fileName = file.name;
+        }
+        
+        // Отправка с mode: 'no-cors' и параметром nocache
+        const response = await fetch(SCRIPT_URL + '?nocache=' + Date.now(), {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        // При mode: 'no-cors' мы не можем прочитать ответ, но запрос отправлен
+        console.log('Запрос отправлен (no-cors mode)');
+        
+        // Показываем успешное сообщение (мы не можем проверить ответ при no-cors)
+        alert('✅ Задача успешно добавлена!');
+        document.getElementById('form').reset();
+        // Устанавливаем сегодняшнюю дату снова и периодичность по умолчанию
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('lastDate').value = today;
+        document.getElementById('periodicity').value = '7';
+        
+      } catch (error) {
+        console.error('Ошибка:', error);
+        alert('❌ Произошла ошибка при добавлении задачи.');
+      } finally {
+        // Скрываем индикатор загрузки
+        loader.style.display = 'none';
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Функция для чтения файла как base64
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          resolve(evt.target.result);
+        };
+        reader.onerror = function() {
+          reject(new Error('Ошибка при чтении файла'));
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Улучшение UX: фокус на первом поле при загрузке
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('lastDate').value = today;
+      document.getElementById('taskName').focus();
+      // Проверяем, помещается ли форма на экране
+      setTimeout(checkFormFitsScreen, 100);
+    });
+    
+    // Также проверяем при изменении размера окна
+    window.addEventListener('resize', checkFormFitsScreen);
+  </script>
+</body>
+</html>
