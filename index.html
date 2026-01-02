@@ -53,6 +53,32 @@
             padding-right: env(safe-area-inset-right);
         }
 
+        /* СТИЛИ ДЛЯ АНИМАЦИИ ПАДАЮЩИХ ИНСТРУМЕНТОВ */
+        .tool {
+            position: fixed;
+            top: -100px;
+            pointer-events: none;
+            will-change: transform;
+            opacity: 0.9;
+            animation-name: fall, sway;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: 1, infinite;
+            z-index: 9998;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(140vh) rotate(540deg);
+                opacity: 0.1;
+            }
+        }
+
+        @keyframes sway {
+            0%   { margin-left: 0; }
+            50%  { margin-left: 12px; }
+            100% { margin-left: 0; }
+        }
+
         /* НОВАЯ ШАПКА ИЗ ВТОРОГО КОДА */
         header {
             background-color: #1f2937;
@@ -1304,6 +1330,9 @@
     </style>
 </head>
 <body>
+    <!-- АНИМАЦИЯ ПАДАЮЩИХ ИНСТРУМЕНТОВ -->
+    <div id="tools-container"></div>
+    
     <!-- ПОЛНОЭКРАННАЯ ЗАГРУЗКА -->
     <div class="fullscreen-loading" id="fullscreen-loading">
         <div class="chaotic-orbit"></div>
@@ -1398,6 +1427,71 @@
     </div>
 
     <script>
+        // КОД ДЛЯ АНИМАЦИИ ПАДАЮЩИХ ИНСТРУМЕНТОВ
+        const icons = ['🔧', '🧽'];
+        const minDistance = 80;
+        const active = [];
+
+        function canSpawn(x) {
+            return active.every(item => Math.abs(item.x - x) > minDistance);
+        }
+
+        function spawnTool() {
+            let x, attempts = 0;
+
+            do {
+                x = Math.random() * window.innerWidth;
+                attempts++;
+                if (attempts > 10) return;
+            } while (!canSpawn(x));
+
+            const el = document.createElement('div');
+            el.className = 'tool';
+            el.textContent = icons[Math.floor(Math.random() * icons.length)];
+
+            const size = 22 + Math.random() * 26;
+            const duration = 1.6 + Math.random() * 1.4;
+
+            el.style.left = x + 'px';
+            el.style.fontSize = size + 'px';
+            el.style.animationDuration = `${duration}s, ${2 + Math.random() * 2}s`;
+
+            document.getElementById('tools-container').appendChild(el);
+
+            const item = { el, x };
+            active.push(item);
+
+            setTimeout(() => {
+                if (el.parentNode) {
+                    el.remove();
+                }
+                const index = active.indexOf(item);
+                if (index > -1) {
+                    active.splice(index, 1);
+                }
+            }, duration * 1000);
+        }
+
+        // Запускаем анимацию инструментов
+        let toolInterval = null;
+        
+        function startToolsAnimation() {
+            if (toolInterval) clearInterval(toolInterval);
+            toolInterval = setInterval(spawnTool, 140);
+        }
+        
+        function stopToolsAnimation() {
+            if (toolInterval) {
+                clearInterval(toolInterval);
+                toolInterval = null;
+            }
+            
+            // Очищаем все существующие инструменты
+            const toolsContainer = document.getElementById('tools-container');
+            toolsContainer.innerHTML = '';
+            active.length = 0;
+        }
+
         // ФУНКЦИИ ДЛЯ РАБОТЫ ШАПКИ
         function toggleSiteNameDropdown() {
             const dropdown = document.getElementById("siteNameDropdown");
@@ -1445,6 +1539,9 @@
             loadingText.textContent = message;
             loading.style.display = 'flex';
             mainContainer.style.display = 'none';
+            
+            // Останавливаем анимацию инструментов при загрузке
+            stopToolsAnimation();
         }
 
         // Функция для скрытия полноэкранной загрузки
@@ -1454,6 +1551,9 @@
             
             loading.style.display = 'none';
             mainContainer.style.display = 'flex';
+            
+            // Запускаем анимацию инструментов после загрузки
+            startToolsAnimation();
         }
 
         // Функция для показа загрузки при операциях
