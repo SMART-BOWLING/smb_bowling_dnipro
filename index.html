@@ -53,32 +53,6 @@
             padding-right: env(safe-area-inset-right);
         }
 
-        /* СТИЛИ ДЛЯ АНИМАЦИИ ПАДАЮЩИХ ИНСТРУМЕНТОВ */
-        .tool {
-            position: fixed;
-            top: -100px;
-            pointer-events: none;
-            will-change: transform;
-            opacity: 0.9;
-            animation-name: fall, sway;
-            animation-timing-function: linear, ease-in-out;
-            animation-iteration-count: 1, infinite;
-            z-index: 9998;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(140vh) rotate(540deg);
-                opacity: 0.1;
-            }
-        }
-
-        @keyframes sway {
-            0%   { margin-left: 0; }
-            50%  { margin-left: 12px; }
-            100% { margin-left: 0; }
-        }
-
         /* НОВАЯ ШАПКА ИЗ ВТОРОГО КОДА */
         header {
             background-color: #1f2937;
@@ -200,6 +174,43 @@
             font-size: 16px;
         }
 
+        /* АНИМАЦИЯ ПАДАЮЩИХ ИНСТРУМЕНТОВ */
+        .tools-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .tool {
+            position: absolute;
+            top: -100px;
+            pointer-events: none;
+            will-change: transform;
+            opacity: 0.9;
+            animation-name: fall, sway;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: 1, infinite;
+            z-index: 0;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(140vh) rotate(540deg);
+                opacity: 0.1;
+            }
+        }
+
+        @keyframes sway {
+            0%   { margin-left: 0; }
+            50%  { margin-left: 12px; }
+            100% { margin-left: 0; }
+        }
+
         /* ПОЛНОЭКРАННАЯ ЗАГРУЗКА */
         .fullscreen-loading {
             position: fixed;
@@ -246,6 +257,8 @@
             padding-bottom: env(safe-area-inset-bottom);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
+            position: relative;
+            z-index: 1;
         }
 
         .header-section {
@@ -340,6 +353,8 @@
             flex: 1;
             overflow-y: auto;
             flex-direction: column;
+            position: relative;
+            z-index: 2;
         }
 
         .tab-content.active {
@@ -1331,7 +1346,7 @@
 </head>
 <body>
     <!-- АНИМАЦИЯ ПАДАЮЩИХ ИНСТРУМЕНТОВ -->
-    <div id="tools-container"></div>
+    <div class="tools-animation" id="tools-animation"></div>
     
     <!-- ПОЛНОЭКРАННАЯ ЗАГРУЗКА -->
     <div class="fullscreen-loading" id="fullscreen-loading">
@@ -1427,7 +1442,8 @@
     </div>
 
     <script>
-        // КОД ДЛЯ АНИМАЦИИ ПАДАЮЩИХ ИНСТРУМЕНТОВ
+        // КОД АНИМАЦИИ ПАДАЮЩИХ ИНСТРУМЕНТОВ
+        const toolsAnimation = document.getElementById("tools-animation");
         const icons = ['🔧', '🧽'];
         const minDistance = 80;
         const active = [];
@@ -1456,41 +1472,19 @@
             el.style.fontSize = size + 'px';
             el.style.animationDuration = `${duration}s, ${2 + Math.random() * 2}s`;
 
-            document.getElementById('tools-container').appendChild(el);
+            toolsAnimation.appendChild(el);
 
             const item = { el, x };
             active.push(item);
 
             setTimeout(() => {
-                if (el.parentNode) {
-                    el.remove();
-                }
-                const index = active.indexOf(item);
-                if (index > -1) {
-                    active.splice(index, 1);
-                }
+                el.remove();
+                active.splice(active.indexOf(item), 1);
             }, duration * 1000);
         }
 
         // Запускаем анимацию инструментов
-        let toolInterval = null;
-        
-        function startToolsAnimation() {
-            if (toolInterval) clearInterval(toolInterval);
-            toolInterval = setInterval(spawnTool, 140);
-        }
-        
-        function stopToolsAnimation() {
-            if (toolInterval) {
-                clearInterval(toolInterval);
-                toolInterval = null;
-            }
-            
-            // Очищаем все существующие инструменты
-            const toolsContainer = document.getElementById('tools-container');
-            toolsContainer.innerHTML = '';
-            active.length = 0;
-        }
+        setInterval(spawnTool, 140);
 
         // ФУНКЦИИ ДЛЯ РАБОТЫ ШАПКИ
         function toggleSiteNameDropdown() {
@@ -1539,9 +1533,6 @@
             loadingText.textContent = message;
             loading.style.display = 'flex';
             mainContainer.style.display = 'none';
-            
-            // Останавливаем анимацию инструментов при загрузке
-            stopToolsAnimation();
         }
 
         // Функция для скрытия полноэкранной загрузки
@@ -1551,9 +1542,6 @@
             
             loading.style.display = 'none';
             mainContainer.style.display = 'flex';
-            
-            // Запускаем анимацию инструментов после загрузки
-            startToolsAnimation();
         }
 
         // Функция для показа загрузки при операциях
