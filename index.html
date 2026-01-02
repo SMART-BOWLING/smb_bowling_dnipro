@@ -60,7 +60,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 20px; /* Увеличено с 10px */
+            padding: 14px 20px;
             position: fixed;
             top: 0;
             left: 0;
@@ -68,15 +68,15 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             user-select: none;
             z-index: 1000;
-            padding-top: max(14px, env(safe-area-inset-top)); /* Увеличено с 10px */
+            padding-top: max(14px, env(safe-area-inset-top));
             padding-left: max(20px, env(safe-area-inset-left));
             padding-right: max(20px, env(safe-area-inset-right));
-            min-height: 65px; /* Добавлена минимальная высота */
+            min-height: 65px;
         }
 
         .logo img {
-            width: 42px; /* Увеличено с 40px */
-            height: 42px; /* Увеличено с 40px */
+            width: 42px;
+            height: 42px;
             object-fit: cover;
             border-radius: 0;
             transform: translateY(4px);
@@ -85,7 +85,7 @@
         .site-name {
             flex: 1;
             text-align: center;
-            font-size: 21px; /* Увеличено с 20px */
+            font-size: 21px;
             font-weight: bold;
             color: white;
             cursor: pointer;
@@ -125,12 +125,12 @@
         }
 
         .menu-button {
-            width: 32px; /* Увеличено с 30px */
+            width: 32px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 22px; /* Увеличено с 20px */
+            height: 22px;
         }
 
         .menu-button div {
@@ -181,7 +181,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: rgba(255, 255, 255, 0.85); /* ПОЛУПРОЗРАЧНЫЙ ФОН */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -199,7 +199,7 @@
             text-align: center;
             position: relative;
             z-index: 1;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             padding: 10px 20px;
             border-radius: 8px;
         }
@@ -257,7 +257,7 @@
             padding: 0 16px;
             padding-left: max(16px, env(safe-area-inset-left));
             padding-right: max(16px, env(safe-area-inset-right));
-            padding-top: max(70px, env(safe-area-inset-top)); /* Увеличено с max(60px, env(safe-area-inset-top)) */
+            padding-top: max(70px, env(safe-area-inset-top));
         }
 
         .tabs {
@@ -395,8 +395,8 @@
             font-weight: 700;
             color: #000000;
             line-height: 1.4;
-            text-align: left; /* ИЗМЕНЕНИЕ: выравнивание по левому краю */
-            padding: 0 5px; /* Добавлено небольшое внутреннее отступление */
+            text-align: left;
+            padding: 0 5px;
         }
 
         .card-content {
@@ -448,7 +448,7 @@
             background: white;
             border: 2px solid #1a2f40;
             border-radius: 4px;
-            padding: 10px 10px; /* Увеличено с 8px 10px */
+            padding: 10px 10px;
             font-size: 13px;
             font-weight: 700;
             color: #1a2f40;
@@ -458,7 +458,7 @@
             width: auto;
             max-width: 160px;
             min-width: 140px;
-            height: 42px; /* Увеличено с 36px */
+            height: 42px;
             display: flex;
             align-items: center;
         }
@@ -473,16 +473,16 @@
             justify-content: space-between;
             align-items: center;
             gap: 10px;
-            padding: 16px 16px; /* Увеличено с 12px 16px */
+            padding: 16px 16px;
             border-top: 1px solid #e0e0e0;
             margin-top: auto;
-            min-height: 74px; /* Добавлено */
+            min-height: 74px;
         }
 
         .schema-button {
             background-color: #1a2f40;
             color: white;
-            padding: 11px 14px; /* Увеличено с 8px 12px */
+            padding: 11px 14px;
             font-weight: 700;
             border: none;
             border-radius: 4px;
@@ -497,8 +497,8 @@
             flex: 1;
             text-align: center;
             white-space: nowrap;
-            height: 42px; /* Увеличено с 36px */
-            min-height: 42px; /* Добавлено */
+            height: 42px;
+            min-height: 42px;
         }
 
         .schema-button:hover {
@@ -513,7 +513,7 @@
             cursor: pointer;
             user-select: none;
             border-radius: 4px;
-            padding: 11px 14px; /* Увеличено с 8px 12px */
+            padding: 11px 14px;
             font-weight: 700;
             font-size: 13px;
             transition: all 0.3s ease;
@@ -523,8 +523,8 @@
             justify-content: center;
             gap: 6px;
             white-space: nowrap;
-            height: 42px; /* Увеличено с 36px */
-            min-height: 42px; /* Добавлено */
+            height: 42px;
+            min-height: 42px;
         }
 
         .submit-btn:hover {
@@ -541,7 +541,7 @@
         .submitted-text {
             color: #000;
             font-weight: 700;
-            padding: 11px 14px; /* Увеличено с 8px 12px */
+            padding: 11px 14px;
             border: 1px solid #FFFFFF;
             border-radius: 4px;
             font-size: 13px;
@@ -552,8 +552,8 @@
             align-items: center;
             justify-content: center;
             white-space: nowrap;
-            height: 42px; /* Увеличено с 36px */
-            min-height: 42px; /* Добавлено */
+            height: 42px;
+            min-height: 42px;
             gap: 6px;
         }
 
@@ -564,7 +564,7 @@
             border-top: 1px solid #e0e0e0;
             margin-top: auto;
             position: relative;
-            min-height: 66px; /* Увеличено с 60px */
+            min-height: 66px;
         }
 
         .catalog-button-wrapper {
@@ -584,7 +584,7 @@
         .open-button {
             background-color: #1a2f40;
             color: white;
-            padding: 13px 24px; /* Увеличено с 10px 24px */
+            padding: 13px 24px;
             font-weight: 700;
             border: none;
             border-radius: 4px;
@@ -598,8 +598,8 @@
             transition: all 0.3s ease;
             text-align: center;
             white-space: nowrap;
-            height: 46px; /* Увеличено с 40px */
-            min-height: 46px; /* Добавлено */
+            height: 46px;
+            min-height: 46px;
             min-width: 140px;
             width: auto;
             flex: 0 0 auto;
@@ -613,7 +613,7 @@
         .no-open {
             color: #999;
             font-style: italic;
-            padding: 13px 24px; /* Увеличено тоже */
+            padding: 13px 24px;
             border: 1px dashed #ddd;
             border-radius: 4px;
             font-size: 11px;
@@ -623,8 +623,8 @@
             align-items: center;
             justify-content: center;
             white-space: nowrap;
-            height: 46px; /* Увеличено тоже */
-            min-height: 46px; /* Добавлено */
+            height: 46px;
+            min-height: 46px;
             min-width: 140px;
             width: auto;
             flex: 0 0 auto;
@@ -770,176 +770,175 @@
         /* АДАПТИВНОСТЬ ДЛЯ НОВОЙ ШАПКИ */
         @media (max-width: 767px) {
             header {
-                padding: 12px 15px; /* Увеличено с 8px */
+                padding: 12px 15px;
                 padding-top: max(12px, env(safe-area-inset-top));
                 padding-left: max(15px, env(safe-area-inset-left));
                 padding-right: max(15px, env(safe-area-inset-right));
             }
             
             .logo img {
-                width: 38px; /* Увеличено */
-                height: 38px; /* Увеличено */
+                width: 38px;
+                height: 38px;
             }
             
             .site-name {
-                font-size: 19px; /* Увеличено */
+                font-size: 19px;
             }
             
             .header-section {
-                padding-top: max(65px, env(safe-area-inset-top)); /* Увеличено */
+                padding-top: max(65px, env(safe-area-inset-top));
             }
             
-            /* Увеличим кнопки для мобильных */
             .schema-button,
             .submit-btn,
             .submitted-text {
-                height: 38px; /* Увеличено с 34px */
+                height: 38px;
                 min-height: 38px;
-                padding: 9px 12px; /* Увеличено */
+                padding: 9px 12px;
                 font-size: 12px;
             }
             
             .open-button,
             .no-open {
-                height: 42px; /* Увеличено с 36px */
+                height: 42px;
                 min-height: 42px;
-                padding: 11px 20px; /* Увеличено */
+                padding: 11px 20px;
                 font-size: 12px;
             }
             
             .buttons-container {
-                padding: 14px 12px; /* Увеличено */
+                padding: 14px 12px;
                 min-height: 68px;
             }
             
             .catalog-buttons-container {
-                min-height: 62px; /* Увеличено с 56px */
+                min-height: 62px;
             }
             
             .executor-select {
-                height: 38px; /* Увеличено с 34px */
-                padding: 9px 8px; /* Увеличено */
+                height: 38px;
+                padding: 9px 8px;
                 font-size: 12px;
             }
             
             .task-title {
-                text-align: left; /* ИЗМЕНЕНИЕ: для мобильных тоже по левому краю */
+                text-align: left;
             }
         }
 
         @media (max-width: 480px) {
             header {
-                padding: 10px 12px; /* Увеличено */
+                padding: 10px 12px;
                 padding-top: max(10px, env(safe-area-inset-top));
                 padding-left: max(12px, env(safe-area-inset-left));
                 padding-right: max(12px, env(safe-area-inset-right));
             }
             
             .logo img {
-                width: 36px; /* Увеличено */
-                height: 36px; /* Увеличено */
+                width: 36px;
+                height: 36px;
             }
             
             .site-name {
-                font-size: 17px; /* Увеличено */
+                font-size: 17px;
             }
             
             .header-section {
-                padding-top: max(60px, env(safe-area-inset-top)); /* Увеличено */
+                padding-top: max(60px, env(safe-area-inset-top));
             }
             
             .schema-button,
             .submit-btn,
             .submitted-text {
-                height: 36px; /* Увеличено с 32px */
+                height: 36px;
                 min-height: 36px;
-                padding: 8px 10px; /* Увеличено */
+                padding: 8px 10px;
                 font-size: 11px;
             }
             
             .open-button,
             .no-open {
-                height: 40px; /* Увеличено с 34px */
+                height: 40px;
                 min-height: 40px;
-                padding: 10px 18px; /* Увеличено */
+                padding: 10px 18px;
                 font-size: 11px;
             }
             
             .buttons-container {
-                padding: 12px 12px; /* Увеличено */
+                padding: 12px 12px;
                 min-height: 64px;
             }
             
             .catalog-buttons-container {
-                min-height: 58px; /* Увеличено с 52px */
+                min-height: 58px;
             }
             
             .executor-select {
-                height: 36px; /* Увеличено с 32px */
-                padding: 8px 7px; /* Увеличено */
+                height: 36px;
+                padding: 8px 7px;
                 font-size: 11px;
             }
             
             .menu-button {
-                width: 28px; /* Увеличено */
-                height: 20px; /* Увеличено */
+                width: 28px;
+                height: 20px;
             }
             
             .task-title {
-                text-align: left; /* ИЗМЕНЕНИЕ: для мобильных тоже по левому краю */
+                text-align: left;
             }
         }
 
         @media (max-width: 360px) {
             header {
-                padding: 9px 10px; /* Увеличено */
+                padding: 9px 10px;
                 padding-top: max(9px, env(safe-area-inset-top));
                 padding-left: max(10px, env(safe-area-inset-left));
                 padding-right: max(10px, env(safe-area-inset-right));
             }
             
             .site-name {
-                font-size: 16px; /* Увеличено */
+                font-size: 16px;
             }
             
             .header-section {
-                padding-top: max(58px, env(safe-area-inset-top)); /* Увеличено */
+                padding-top: max(58px, env(safe-area-inset-top));
             }
             
             .schema-button,
             .submit-btn,
             .submitted-text {
-                height: 34px; /* Увеличено с 30px */
+                height: 34px;
                 min-height: 34px;
-                padding: 7px 8px; /* Увеличено */
+                padding: 7px 8px;
                 font-size: 10px;
             }
             
             .open-button,
             .no-open {
-                height: 38px; /* Увеличено с 32px */
+                height: 38px;
                 min-height: 38px;
-                padding: 9px 16px; /* Увеличено */
+                padding: 9px 16px;
                 font-size: 10px;
             }
             
             .buttons-container {
-                padding: 10px 8px; /* Увеличено */
+                padding: 10px 8px;
                 min-height: 60px;
             }
             
             .catalog-buttons-container {
-                min-height: 54px; /* Увеличено с 48px */
+                min-height: 54px;
             }
             
             .executor-select {
-                height: 34px; /* Увеличено с 30px */
-                padding: 7px 6px; /* Увеличено */
+                height: 34px;
+                padding: 7px 6px;
                 font-size: 10px;
             }
             
             .task-title {
-                text-align: left; /* ИЗМЕНЕНИЕ: для мобильных тоже по левому краю */
+                text-align: left;
             }
         }
 
@@ -972,7 +971,7 @@
             .header-section {
                 padding-left: max(12px, env(safe-area-inset-left));
                 padding-right: max(12px, env(safe-area-inset-right));
-                padding-top: max(65px, env(safe-area-inset-top)); /* Увеличено */
+                padding-top: max(65px, env(safe-area-inset-top));
             }
             
             .tabs {
@@ -1028,15 +1027,15 @@
             }
             
             .catalog-buttons-container {
-                min-height: 62px; /* Увеличено */
+                min-height: 62px;
             }
             
             .executor-select {
                 max-width: 140px;
                 min-width: 120px;
                 font-size: 12px;
-                padding: 9px 8px; /* Увеличено */
-                height: 38px; /* Увеличено */
+                padding: 9px 8px;
+                height: 38px;
             }
             
             .row-label {
@@ -1049,7 +1048,7 @@
             }
             
             .task-title {
-                text-align: left; /* ИЗМЕНЕНИЕ: для мобильных тоже по левому краю */
+                text-align: left;
             }
         }
 
@@ -1057,7 +1056,7 @@
             .header-section {
                 padding-left: max(10px, env(safe-area-inset-left));
                 padding-right: max(10px, env(safe-area-inset-right));
-                padding-top: max(60px, env(safe-area-inset-top)); /* Увеличено */
+                padding-top: max(60px, env(safe-area-inset-top));
             }
             
             .tabs {
@@ -1094,7 +1093,7 @@
             
             .task-title {
                 font-size: 15px;
-                text-align: left; /* ИЗМЕНЕНИЕ: для мобильных тоже по левому краю */
+                text-align: left;
             }
             
             .row-label, .row-value {
@@ -1102,15 +1101,15 @@
             }
             
             .catalog-buttons-container {
-                min-height: 58px; /* Увеличено */
+                min-height: 58px;
             }
             
             .executor-select {
                 max-width: 120px;
                 min-width: 100px;
                 font-size: 11px;
-                padding: 8px 7px; /* Увеличено */
-                height: 36px; /* Увеличено */
+                padding: 8px 7px;
+                height: 36px;
             }
             
             .row-label {
@@ -1135,15 +1134,15 @@
             .header-section {
                 padding-left: max(8px, env(safe-area-inset-left));
                 padding-right: max(8px, env(safe-area-inset-right));
-                padding-top: max(58px, env(safe-area-inset-top)); /* Увеличено */
+                padding-top: max(58px, env(safe-area-inset-top));
             }
             
             .executor-select {
                 max-width: 110px;
                 min-width: 90px;
                 font-size: 10px;
-                padding: 7px 6px; /* Увеличено */
-                height: 34px; /* Увеличено */
+                padding: 7px 6px;
+                height: 34px;
             }
             
             .row-label {
@@ -1157,7 +1156,7 @@
             }
             
             .catalog-buttons-container {
-                min-height: 54px; /* Увеличено */
+                min-height: 54px;
             }
             
             .loading-text {
@@ -1165,7 +1164,7 @@
             }
             
             .task-title {
-                text-align: left; /* ИЗМЕНЕНИЕ: для мобильных тоже по левому краю */
+                text-align: left;
             }
         }
     </style>
@@ -1581,6 +1580,7 @@
                     if (immediateUpdateResult === 'SUCCESS') {
                         showNotification('Задача выполнена! Данные обновлены мгновенно.', 'success');
                         
+                        // ОБНОВЛЯЕМ КАРТОЧКУ БЕЗ ПЕРЕЗАГРУЗКИ СТРАНИЦЫ
                         const card = document.querySelector(`[data-task-id="${taskId}"]`);
                         if (card) {
                             const submitBtn = card.querySelector('.submit-btn');
@@ -1600,21 +1600,73 @@
                             }
                         }
                         
+                        // ОБНОВЛЯЕМ ДАННЫЕ В ФОНОВОМ РЕЖИМЕ ВО ВРЕМЯ АНИМАЦИИ ЗАГРУЗКИ
                         journalData = null;
                         tasksData = null;
                         
+                        // Загружаем обновленные данные
+                        await Promise.all([
+                            makeRequest(`${BACKEND_URL}?action=getJournal`).then(journal => {
+                                journalData = journal.reverse();
+                            }),
+                            makeRequest(`${BACKEND_URL}?action=getTasks`).then(tasks => {
+                                tasksData = tasks;
+                            })
+                        ]);
+                        
+                        // Скрываем анимацию загрузки
                         setTimeout(() => {
-                            loadJournal();
-                            loadTasks();
                             hideFullscreenLoading();
-                        }, 1000);
+                            
+                            // Обновляем отображение карточек
+                            renderJournalCards(journalData);
+                            renderTasksCards(tasksData);
+                        }, 500);
+                        
                     } else {
                         showNotification('Задача выполнена, но обновление даты займет до 1 минуты', 'warning');
-                        setTimeout(() => {
-                            loadJournal();
-                            loadTasks();
-                            hideFullscreenLoading();
-                        }, 1000);
+                        
+                        // ОБНОВЛЯЕМ КАРТОЧКУ БЕЗ ПЕРЕЗАГРУЗКИ СТРАНИЦЫ
+                        const card = document.querySelector(`[data-task-id="${taskId}"]`);
+                        if (card) {
+                            const submitBtn = card.querySelector('.submit-btn');
+                            if (submitBtn) {
+                                const submittedText = document.createElement('div');
+                                submittedText.className = 'submitted-text';
+                                submittedText.innerHTML = '<i class="fas fa-check-circle"></i>ОТПРАВЛЕНО';
+                                submitBtn.parentNode.replaceChild(submittedText, submitBtn);
+                            }
+                            
+                            const select = card.querySelector('.executor-select');
+                            if (select) {
+                                const executorName = document.createElement('span');
+                                executorName.className = 'row-value';
+                                executorName.textContent = executor;
+                                select.parentNode.replaceChild(executorName, select);
+                            }
+                        }
+                        
+                        // Загружаем обновленные данные в фоновом режиме
+                        setTimeout(async () => {
+                            try {
+                                const [journal, tasks] = await Promise.all([
+                                    makeRequest(`${BACKEND_URL}?action=getJournal`),
+                                    makeRequest(`${BACKEND_URL}?action=getTasks`)
+                                ]);
+                                
+                                journalData = journal.reverse();
+                                tasksData = tasks;
+                                
+                                hideFullscreenLoading();
+                                
+                                // Обновляем отображение карточек
+                                renderJournalCards(journalData);
+                                renderTasksCards(tasksData);
+                            } catch (error) {
+                                console.error('Ошибка обновления данных:', error);
+                                hideFullscreenLoading();
+                            }
+                        }, 2000);
                     }
                 } else {
                     hideFullscreenLoading();
