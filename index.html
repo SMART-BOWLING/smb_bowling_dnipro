@@ -1709,7 +1709,7 @@
                                     <span class="row-label">Выполнил:</span>
                                     <span class="row-value">
                                         <select class="executor-select" id="executor-${taskId}">
-                                            <option value="" selected disabled>Выберите...</option>
+                                            <option value="" selected disabled>Кто выполнил?</option>
                                             <option value="Вадим">Вадим</option>
                                             <option value="Гена">Гена</option>
                                             <option value="Саша">Саша</option>
@@ -1812,7 +1812,7 @@
             }
             
             // ПРОВЕРЯЕМ, ЧТО ВЫБРАН ИСПОЛНИТЕЛЬ
-            if (!select.value || select.value === '' || select.value === 'Выберите...') {
+            if (!select.value || select.value === '' || select.value === 'Кто выполнил?') {
                 showNotification('Выберите исполнителя перед отправкой', 'error');
                 return;
             }
