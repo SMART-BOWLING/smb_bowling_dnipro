@@ -173,71 +173,32 @@
             font-size: 16px;
         }
 
-        /* ОПТИМИЗИРОВАННАЯ АНИМАЦИЯ ЗАГРУЗКИ */
-        .fullscreen-loading {
+        /* АНИМАЦИЯ ЗАГРУЗКИ КАК В ПРИМЕРЕ */
+        .loader-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.85);
+            background-color: rgba(255, 255, 255, 0.85);
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 9999;
-            gap: 20px;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-            overflow: hidden;
-            animation: fadeIn 0.2s ease-in;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #dc143c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .fullscreen-loading .loading-text {
-            font-size: 16px;
-            color: #1a2f40;
-            font-weight: 600;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 8px;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .tool {
-            position: absolute;
-            top: -100px;
-            pointer-events: none;
-            will-change: transform;
-            opacity: 0.9;
-            animation-name: fall, sway;
-            animation-timing-function: linear, ease-in-out;
-            animation-iteration-count: 1, infinite;
-            z-index: 0;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(140vh) rotate(540deg);
-                opacity: 0.1;
-            }
-        }
-
-        @keyframes sway {
-            0%   { margin-left: 0; }
-            50%  { margin-left: 12px; }
-            100% { margin-left: 0; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .container {
@@ -1177,8 +1138,9 @@
     </style>
 </head>
 <body>
-    <div class="fullscreen-loading" id="fullscreen-loading">
-        <div class="loading-text">Загрузка приложения...</div>
+    <!-- АНИМАЦИЯ ЗАГРУЗКИ -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
     </div>
     
     <div class="notification" id="notification"></div>
@@ -1270,7 +1232,6 @@
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyBiibLN40TjLDo1pz69ogyUgERUBhuCcmmkXDCgvS3fUGbt6ifyt_Lh9f3gg8yXZOA/exec';
         const CARDS_PER_PAGE = 6;
         const CACHE_DURATION = 30000; // 30 секунд кэширования
-        const RETRY_DELAY = 2000; // Задержка повторной попытки
 
         // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
         let tasksData = null;
@@ -1283,142 +1244,27 @@
         let totalJournalPages = 1;
         let totalTasksPages = 1;
         
-        let fallingToolsInterval = null;
         let isInitialLoad = true;
 
-        // ОПТИМИЗИРОВАННАЯ ФУНКЦИЯ ДЛЯ ЗАПРОСОВ С КЭШИРОВАНИЕМ И ПОВТОРНЫМИ ПОПЫТКАМИ
-        async function makeRequest(url, options = {}, retries = 2) {
-            const cacheKey = url + JSON.stringify(options);
-            const now = Date.now();
-            
-            // Проверяем кэш
-            if (dataCache[cacheKey] && cacheTimestamp[cacheKey]) {
-                const age = now - cacheTimestamp[cacheKey];
-                if (age < CACHE_DURATION) {
-                    return dataCache[cacheKey];
-                }
-            }
-            
-            try {
-                // Добавляем timestamp для предотвращения кэширования браузера
-                const separator = url.includes('?') ? '&' : '?';
-                const timestampedUrl = `${url}${separator}_t=${now}`;
-                
-                const startTime = performance.now();
-                const response = await fetch(timestampedUrl, options);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                const endTime = performance.now();
-                
-                console.log(`Request to ${url} took ${(endTime - startTime).toFixed(2)}ms`);
-                
-                // Сохраняем в кэш
-                dataCache[cacheKey] = data;
-                cacheTimestamp[cacheKey] = now;
-                
-                return data;
-            } catch (error) {
-                console.warn(`Request failed (${retries} retries left):`, error);
-                
-                if (retries > 0) {
-                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-                    return makeRequest(url, options, retries - 1);
-                }
-                
-                throw error;
-            }
-        }
-
-        // ОПТИМИЗИРОВАННАЯ АНИМАЦИЯ ПАДАЮЩИХ ИНСТРУМЕНТОВ
-        const icons = ['🔧', '🧽'];
-        const activeTools = [];
-
-        function createTool(x, size, duration) {
-            const el = document.createElement('div');
-            el.className = 'tool';
-            el.textContent = icons[Math.floor(Math.random() * icons.length)];
-            el.style.left = x + 'px';
-            el.style.fontSize = size + 'px';
-            el.style.animationDuration = `${duration}s, ${2 + Math.random() * 2}s`;
-            
-            return el;
-        }
-
-        function spawnTool() {
-            const loadingContainer = document.getElementById('fullscreen-loading');
-            if (!loadingContainer) return;
-
-            const x = Math.random() * window.innerWidth;
-            const size = 22 + Math.random() * 26;
-            const duration = 1.2 + Math.random() * 0.8; // Ускоренная анимация
-
-            const el = createTool(x, size, duration);
-            loadingContainer.appendChild(el);
-
-            const tool = { el, x };
-            activeTools.push(tool);
-
-            setTimeout(() => {
-                if (el.parentNode) {
-                    el.remove();
-                    const index = activeTools.indexOf(tool);
-                    if (index > -1) {
-                        activeTools.splice(index, 1);
-                    }
-                }
-            }, duration * 1000);
-        }
-
-        function startFallingToolsAnimation() {
-            document.querySelectorAll('.tool').forEach(tool => tool.remove());
-            activeTools.length = 0;
-            
-            return setInterval(spawnTool, 100); // Ускоренная генерация
-        }
-
-        function stopFallingToolsAnimation(intervalId) {
-            if (intervalId) {
-                clearInterval(intervalId);
-            }
-            document.querySelectorAll('.tool').forEach(tool => tool.remove());
-            activeTools.length = 0;
-        }
-
         // УПРАВЛЕНИЕ ЗАГРУЗКОЙ
-        function showFullscreenLoading(message = 'Загрузка...') {
-            const loading = document.getElementById('fullscreen-loading');
+        function showLoader() {
+            const loader = document.getElementById('loader');
             const mainContainer = document.getElementById('main-container');
-            const loadingText = loading.querySelector('.loading-text');
             
-            loadingText.textContent = message;
-            loading.style.display = 'flex';
+            loader.style.display = 'flex';
             mainContainer.style.display = 'none';
-            
-            if (fallingToolsInterval) {
-                stopFallingToolsAnimation(fallingToolsInterval);
-            }
-            fallingToolsInterval = startFallingToolsAnimation();
         }
 
-        function hideFullscreenLoading() {
-            const loading = document.getElementById('fullscreen-loading');
+        function hideLoader() {
+            const loader = document.getElementById('loader');
             const mainContainer = document.getElementById('main-container');
             
-            loading.style.display = 'none';
+            loader.style.display = 'none';
             mainContainer.style.display = 'flex';
-            
-            if (fallingToolsInterval) {
-                stopFallingToolsAnimation(fallingToolsInterval);
-                fallingToolsInterval = null;
-            }
         }
 
-        function showOperationLoading(message) {
-            showFullscreenLoading(message);
+        function showOperationLoading() {
+            showLoader();
         }
 
         // УТИЛИТЫ
@@ -1461,7 +1307,44 @@
             }, 3000);
         }
 
-        // ОПТИМИЗИРОВАННАЯ ПАГИНАЦИЯ
+        // ОПТИМИЗИРОВАННАЯ ФУНКЦИЯ ДЛЯ ЗАПРОСОВ С КЭШИРОВАНИЕМ
+        async function makeRequest(url, options = {}) {
+            const cacheKey = url + JSON.stringify(options);
+            const now = Date.now();
+            
+            // Проверяем кэш
+            if (dataCache[cacheKey] && cacheTimestamp[cacheKey]) {
+                const age = now - cacheTimestamp[cacheKey];
+                if (age < CACHE_DURATION) {
+                    return dataCache[cacheKey];
+                }
+            }
+            
+            try {
+                // Добавляем timestamp для предотвращения кэширования браузера
+                const separator = url.includes('?') ? '&' : '?';
+                const timestampedUrl = `${url}${separator}_t=${now}`;
+                
+                const response = await fetch(timestampedUrl, options);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Сохраняем в кэш
+                dataCache[cacheKey] = data;
+                cacheTimestamp[cacheKey] = now;
+                
+                return data;
+            } catch (error) {
+                console.error('Ошибка запроса:', error);
+                throw error;
+            }
+        }
+
+        // ПАГИНАЦИЯ
         function updatePagination(type, currentPage, totalPages) {
             const pagination = document.getElementById(`${type}-pagination`);
             const currentPageSpan = document.getElementById(`${type}-current-page`);
@@ -1502,7 +1385,7 @@
             return data.slice(startIndex, endIndex);
         }
 
-        // ОПТИМИЗИРОВАННАЯ ЗАГРУЗКА ДАННЫХ С ПАРАЛЛЕЛИЗМОМ
+        // ОПТИМИЗИРОВАННАЯ ЗАГРУЗКА ДАННЫХ
         async function loadAllData() {
             try {
                 const [journal, tasks] = await Promise.all([
@@ -1571,7 +1454,7 @@
 
         // ОПТИМИЗИРОВАННОЕ ВЫПОЛНЕНИЕ ЗАДАЧИ
         async function completeTask(taskId, executor, rowIndex) {
-            showOperationLoading('Отправка данных...');
+            showOperationLoading();
             
             try {
                 // ОБНОВЛЯЕМ ЛОКАЛЬНО СРАЗУ
@@ -1580,54 +1463,45 @@
                     updateCardUI(card, executor);
                 }
                 
-                // ОТПРАВЛЯЕМ ДАННЫЕ НА СЕРВЕР (без ожидания ответа для мгновенной обратной связи)
+                // ОТПРАВЛЯЕМ ДАННЫЕ НА СЕРВЕР
                 const updateUrl = `${BACKEND_URL}?action=updateCell&sheetName=B&column=E&row=${rowIndex}&value=${encodeURIComponent(executor)}`;
                 
-                // Отправляем запрос без блокировки UI
-                Promise.all([
+                // Отправляем запросы параллельно
+                const [result, immediateUpdateResult] = await Promise.all([
                     makeRequest(updateUrl),
                     makeRequest(`${BACKEND_URL}?action=updateFromRowNumber&rowNumber=${rowIndex}`)
-                ]).then(([result, immediateUpdateResult]) => {
-                    if (result.success) {
-                        const message = immediateUpdateResult === 'SUCCESS' 
-                            ? 'Задача выполнена! Данные обновлены мгновенно.' 
-                            : 'Задача выполнена!';
-                        
-                        showNotification(message, 'success');
-                        
-                        // ОБНОВЛЯЕМ ДАННЫЕ В ФОНОВОМ РЕЖИМЕ
-                        setTimeout(async () => {
-                            try {
-                                await Promise.all([
-                                    makeRequest(`${BACKEND_URL}?action=getJournal`).then(journal => {
-                                        journalData = journal.reverse();
-                                    }),
-                                    makeRequest(`${BACKEND_URL}?action=getTasks`).then(tasks => {
-                                        tasksData = tasks;
-                                    })
-                                ]);
-                                
-                                // СКРЫВАЕМ ЗАГРУЗКУ И ОБНОВЛЯЕМ ИНТЕРФЕЙС
-                                hideFullscreenLoading();
-                                renderJournalCards(journalData);
-                                renderTasksCards(tasksData);
-                                
-                            } catch (error) {
-                                console.error('Ошибка обновления данных:', error);
-                                hideFullscreenLoading();
-                            }
-                        }, 300); // Быстрое обновление
-                    }
-                }).catch(error => {
-                    console.error('Ошибка отправки данных:', error);
-                    hideFullscreenLoading();
-                    showNotification('Ошибка отправки данных', 'error');
-                });
+                ]);
                 
+                if (result.success) {
+                    const message = immediateUpdateResult === 'SUCCESS' 
+                        ? 'Задача выполнена! Данные обновлены мгновенно.' 
+                        : 'Задача выполнена!';
+                    
+                    showNotification(message, 'success');
+                    
+                    // Обновляем данные
+                    const [journal, tasks] = await Promise.all([
+                        makeRequest(`${BACKEND_URL}?action=getJournal`),
+                        makeRequest(`${BACKEND_URL}?action=getTasks`)
+                    ]);
+                    
+                    journalData = journal.reverse();
+                    tasksData = tasks;
+                    
+                    hideLoader();
+                    
+                    // Обновляем интерфейс
+                    renderJournalCards(journalData);
+                    renderTasksCards(tasksData);
+                    
+                } else {
+                    hideLoader();
+                    showNotification('Ошибка: ' + result.error, 'error');
+                }
             } catch (error) {
                 console.error('Ошибка выполнения задачи:', error);
-                hideFullscreenLoading();
-                showNotification('Ошибка выполнения задачи: ' + error.message, 'error');
+                hideLoader();
+                showNotification('Ошибка выполнения задачи', 'error');
             }
         }
 
@@ -1650,7 +1524,7 @@
             }
         }
 
-        // ОПТИМИЗИРОВАННЫЙ РЕНДЕРИНГ КАРТОЧЕК
+        // РЕНДЕРИНГ КАРТОЧЕК
         function renderTasksCards(tasks) {
             const tasksCards = document.getElementById('tasks-cards');
             
@@ -1917,17 +1791,17 @@
             });
             
             // Запускаем начальную загрузку
-            showFullscreenLoading('Загрузка приложения...');
+            showLoader();
             
             // Параллельная загрузка всех данных
             loadAllData().then(() => {
                 setTimeout(() => {
-                    hideFullscreenLoading();
+                    hideLoader();
                     isInitialLoad = false;
                 }, 300);
             }).catch(error => {
                 console.error('Ошибка начальной загрузки:', error);
-                hideFullscreenLoading();
+                hideLoader();
                 showNotification('Ошибка загрузки данных', 'error');
             });
             
